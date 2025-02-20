@@ -21,16 +21,9 @@ FwdList* ListManip(FwdList* head, size_t number, size_t count)
   FwdList* dubl = correct->next;
   for (size_t i = 0; i < count; i++)
   {
-    try
-    {
-      FwdList* newList = new FwdList{correct->value, nullptr};
-      correct->next = newList;
-      correct = newList;
-    }
-    catch (...)
-    {
-      throw;
-    }
+    FwdList* newList = new FwdList{correct->value, nullptr};
+    correct->next = newList;
+    correct = newList;
   }
   correct->next = dubl;
   return point;
@@ -53,8 +46,17 @@ int main()
   FwdList* tail = head;
   for (int i = 1; i < size; ++i)
   {
-    tail->next = new FwdList{i, nullptr};
-    tail = tail->next;
+    try
+    {
+      tail->next = new FwdList{i, nullptr};
+      tail = tail->next;
+    }
+    catch (...)
+    {
+      std::cerr << "Error\n";
+      deleteList(head);
+      return 1;
+    }
   }
   size_t pos, count;
   while (std::cin >> pos >> count)
@@ -77,18 +79,15 @@ int main()
     }
   }
   FwdList* current = head;
+  std::cout << current->value;
+  current = current->next;
   while (current)
   {
-    std::cout << current->value;
-    if (current->next)
-    {
-      std::cout << " ";
-    }
-    FwdList* temp = current;
+    std::cout << " " << current->value;
     current = current->next;
-    delete temp;
   }
   std::cout << "\n";
+  deleteList(head);
   return 0;
 }
 
